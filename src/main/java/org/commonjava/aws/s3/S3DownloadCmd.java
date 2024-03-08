@@ -55,8 +55,7 @@ public class S3DownloadCmd
     public void run()
     {
         logger.info("Run download command");
-        Region region = Region.US_EAST_1;
-        S3Client s3 = S3Client.builder().region( region ).build();
+        S3Client s3 = S3Client.builder().build();
         int start = startIndex;
         int end = endIndex + 1;
         IntStream.range( start, end ).forEach( i -> getObject( s3, bucketName, key ) );

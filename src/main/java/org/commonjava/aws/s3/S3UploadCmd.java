@@ -20,13 +20,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.utils.IoUtils;
 
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,8 +49,7 @@ public class S3UploadCmd
     @Override
     public void run()
     {
-        Region region = Region.US_EAST_1;
-        S3Client s3 = S3Client.builder().region( region ).build();
+        S3Client s3 = S3Client.builder().build();
         putS3Object( s3, bucketName, filePath, times );
         s3.close();
     }
@@ -65,10 +63,20 @@ public class S3UploadCmd
                 Map<String, String> metadata = new HashMap<>();
                 metadata.put( "x-amz-meta-myVal", "test" );
                 final String key = fileName + "." + i;
-                PutObjectRequest putOb =
-                        PutObjectRequest.builder().bucket( bucketName ).key( key ).metadata( metadata ).build();
-                logger.info( "Upload {} from file {}", key, filePath );
-                s3.putObject( putOb, RequestBody.fromFile( new File( filePath ) ) );
+                try (FileInputStream fileIn = new FileInputStream( filePath );
+                     S3OutputStream s3os = new S3OutputStream( s3, bucketName, key, metadata ))
+                {
+                    IoUtils.copy( fileIn, s3os );
+                    logger.info( "Uploaded {} from file {}", key, filePath );
+                }
+                catch ( IOException ex )
+                {
+                    logger.error( "Failed to upload file {} due to error: {}", filePath, ex.getMessage() );
+                }
+                //                PutObjectRequest putOb =
+                //                        PutObjectRequest.builder().bucket( bucketName ).key( key ).metadata( metadata ).build();
+                //                logger.info( "Upload {} from file {}", key, filePath );
+                //                s3.putObject( putOb, RequestBody.fromFile( new File( filePath ) ) );
             } ) );
 
         }
