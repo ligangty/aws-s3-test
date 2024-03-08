@@ -181,6 +181,8 @@ public class S3OutputStream
                 CompletedMultipartUpload completedMultipartUpload =
                         CompletedMultipartUpload.builder().parts( completedParts ).build();
                 CompleteMultipartUploadRequest completeMultipartUploadRequest = CompleteMultipartUploadRequest.builder()
+                                                                                                              .bucket(
+                                                                                                                      bucket )
                                                                                                               .key( path )
                                                                                                               .uploadId(
                                                                                                                       uploadId )
@@ -233,6 +235,7 @@ public class S3OutputStream
     protected void uploadPart()
     {
         UploadPartRequest uploadRequest = UploadPartRequest.builder()
+                                                           .bucket( bucket )
                                                            .key( path )
                                                            .uploadId( uploadId )
                                                            .partNumber( etags.size() + 1 )
