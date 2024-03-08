@@ -37,10 +37,10 @@ public class S3UploadCmd
 {
     private final Logger logger = LoggerFactory.getLogger( this.getClass() );
 
-    @Option( names = { "-b", "--bucket" } )
+    @Option( names = { "-b", "--bucket" }, required = true )
     String bucketName;
 
-    @Option( names = { "-f", "--file" } )
+    @Option( names = { "-f", "--file" }, required = true )
     String filePath;
 
     @Option( names = { "-t", "--times" }, defaultValue = "1" )

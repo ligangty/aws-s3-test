@@ -37,10 +37,10 @@ public class S3ListCmd
 {
     private final Logger logger = LoggerFactory.getLogger( this.getClass() );
 
-    @CommandLine.Option( names = { "-b", "--bucket" } )
+    @CommandLine.Option( names = { "-b", "--bucket" }, required = true )
     String bucketName;
 
-    @CommandLine.Option( names = { "-f", "--folder" } )
+    @CommandLine.Option( names = { "-f", "--folder" }, defaultValue = "/" )
     String folder;
 
     @CommandLine.Option( names = { "-t", "--times" }, defaultValue = "1" )

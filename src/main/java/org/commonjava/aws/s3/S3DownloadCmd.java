@@ -39,10 +39,10 @@ public class S3DownloadCmd
 {
     private final Logger logger = LoggerFactory.getLogger( this.getClass() );
 
-    @Option( names = { "-b", "--bucket" } )
+    @Option( names = { "-b", "--bucket" }, required = true )
     String bucketName;
 
-    @Option( names = { "-k", "--key" } )
+    @Option( names = { "-k", "--key" }, required = true )
     String key;
 
     @Option( names = { "-s", "--start" } )
