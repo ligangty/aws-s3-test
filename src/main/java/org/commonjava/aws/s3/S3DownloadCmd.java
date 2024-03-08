@@ -54,11 +54,11 @@ public class S3DownloadCmd
     @Override
     public void run()
     {
-        logger.info("Run download command");
+        logger.info( "Run download command" );
         S3Client s3 = S3Client.builder().build();
         int start = startIndex;
         int end = endIndex + 1;
-        IntStream.range( start, end ).forEach( i -> getObject( s3, bucketName, key ) );
+        IntStream.range( start, end ).forEach( i -> getObject( s3, bucketName, key + "." + i ) );
         s3.close();
     }
 
