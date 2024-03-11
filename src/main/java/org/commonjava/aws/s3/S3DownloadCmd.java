@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import software.amazon.awssdk.core.ResponseBytes;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
@@ -55,11 +54,12 @@ public class S3DownloadCmd
     public void run()
     {
         logger.info( "Run download command" );
-        S3Client s3 = S3Client.builder().build();
-        int start = startIndex;
-        int end = endIndex + 1;
-        IntStream.range( start, end ).forEach( i -> getObject( s3, bucketName, key + "." + i ) );
-        s3.close();
+        try (S3Client s3 = S3Client.builder().build())
+        {
+            int start = startIndex;
+            int end = endIndex + 1;
+            IntStream.range( start, end ).forEach( i -> getObject( s3, bucketName, key + "." + i ) );
+        }
     }
 
     private void getObject( S3Client s3, String bucketName, String objectKey )

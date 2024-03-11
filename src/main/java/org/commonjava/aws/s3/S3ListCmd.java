@@ -50,9 +50,10 @@ public class S3ListCmd
     public void run()
     {
         logger.info( "Run list command" );
-        S3Client s3 = S3Client.builder().build();
-        IntStream.range( 0, times ).forEach( i -> listBucketObjects( s3, bucketName, folder ) );
-        s3.close();
+        try (S3Client s3 = S3Client.builder().build())
+        {
+            IntStream.range( 0, times ).forEach( i -> listBucketObjects( s3, bucketName, folder ) );
+        }
     }
 
     private void listBucketObjects( S3Client s3, String bucketName, String folder )

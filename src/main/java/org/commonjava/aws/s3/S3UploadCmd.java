@@ -49,9 +49,10 @@ public class S3UploadCmd
     @Override
     public void run()
     {
-        S3Client s3 = S3Client.builder().build();
-        putS3Object( s3, bucketName, filePath, times );
-        s3.close();
+        try (S3Client s3 = S3Client.builder().build())
+        {
+            putS3Object( s3, bucketName, filePath, times );
+        }
     }
 
     private void putS3Object( S3Client s3, String bucketName, String filePath, int uploadTimes )

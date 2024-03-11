@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.commonjava.aws;
+package org.commonjava.aws.efs;
 
-import io.quarkus.picocli.runtime.annotations.TopCommand;
-import org.commonjava.aws.efs.EFSBaseCmd;
-import org.commonjava.aws.s3.S3BaseCmd;
 import picocli.CommandLine;
+import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Spec;
 
-@TopCommand
-@CommandLine.Command( mixinStandardHelpOptions = true, subcommands = { S3BaseCmd.class, EFSBaseCmd.class } )
-public class Main
+@CommandLine.Command( name = "efs", subcommands = { EFSCopyFileCmd.class } )
+public class EFSBaseCmd
+        implements Runnable
 {
+    @Spec
+    CommandSpec spec;
+
+    @Override
+    public void run()
+    {
+        throw new CommandLine.ParameterException( spec.commandLine(), "Specify a subcommand" );
+    }
 
 }
